@@ -1,0 +1,66 @@
+:host {
+  display: block;
+  color: var(--ink, #252c25);
+  font: inherit;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.plot {
+  display: block;
+  width: 100%;
+  background: var(--paper, #faf8f1);
+  border: 1px solid var(--line, #dce0d4);
+  border-radius: .28rem;
+}
+
+canvas.plot { aspect-ratio: 16 / 9; }
+
+.ranges {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.25rem), 1fr));
+  gap: .5rem 1rem;
+  margin-block: .8rem .55rem;
+}
+
+.ranges label { display: grid; gap: .15rem; }
+.ranges label > span { display: flex; justify-content: space-between; gap: .45rem; }
+.range-value { font-variant-numeric: tabular-nums; color: var(--accent, #3f6248); }
+input[type="range"] { width: 100%; height: 1.5rem; margin: 0; accent-color: var(--accent, #3f6248); }
+
+.demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .45rem .6rem;
+  margin-block: .72rem .35rem;
+}
+
+button {
+  min-height: 2.25rem;
+  padding: .27rem .75rem;
+  border: 1px solid #b7c7b3;
+  border-radius: .27rem;
+  background: var(--paper, #faf8f1);
+  color: var(--accent, #3f6248);
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover, button.primary { background: var(--accent-soft, #e8eee4); }
+button.primary:hover { background: #dae6d7; }
+
+:focus-visible {
+  outline: 2px solid var(--accent, #3f6248);
+  outline-offset: 2px;
+}
+
+.readout {
+  margin: .62rem 0 0;
+  color: var(--muted, #565f54);
+  font-size: .85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.equation { font-family: var(--mono, monospace); }
+.speed { width: min(100%, 13.25rem); margin-block: .58rem 0; }

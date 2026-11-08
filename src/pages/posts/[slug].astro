@@ -1,0 +1,56 @@
+---
+import type { GetStaticPaths } from 'astro'
+import { render } from 'astro:content'
+import SiteLayout from '../../layouts/SiteLayout.astro'
+import { getPosts } from '../../posts'
+import { categories, categoryUrl } from '../../site'
+import 'katex/dist/katex.min.css'
+import '../../styles/prose.css'
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts()
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }))
+}) satisfies GetStaticPaths
+
+const { post } = Astro.props
+const { title, description, category, date, example } = post.data
+const { Content, headings } = await render(post)
+const sections = headings.filter(({ depth, slug }) => (depth === 2 || depth === 3) && slug !== 'footnote-label')
+const indexUrl = categoryUrl(category)
+---
+
+<SiteLayout title={title} description={description}>
+  <article class="article-width">
+    <header class="article-header">
+      <div class="article-meta">
+        <a class="category-label" href={indexUrl}>{categories[category].title}</a>
+        <time datetime={date}>{date}</time>
+        {example && <span class="example-label">示例文章</span>}
+      </div>
+      <h1>{title}</h1>
+      <p>{description}</p>
+    </header>
+    {sections.length >= 2 && (
+      <nav class="article-toc" aria-label="文章目录">
+        <p>本文目录</p>
+        <ul>
+          {sections.map(({ depth, slug, text }) => (
+            <li class:list={[{ 'toc-subheading': depth === 3 }]}>
+              <a href={`#${slug}`}>{text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+    <div class="prose">
+      <Content />
+    </div>
+    <div class="article-end">
+      <a href={indexUrl}><span aria-hidden="true">←</span> 返回{categories[category].title}</a>
+    </div>
+  </article>
+</SiteLayout>
+
+<script>
+  import '../../demos/note-demo.js'
+</script>

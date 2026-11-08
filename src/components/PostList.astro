@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { postUrl } from '../posts'
+import { categories, categoryUrl } from '../site'
+
+interface Props {
+  posts: CollectionEntry<'posts'>[]
+  showCategory?: boolean
+}
+
+const { posts, showCategory = true } = Astro.props
+---
+
+{posts.length ? (
+  <ul class="post-list">
+    {posts.map(({ id, data }) => (
+      <li class="post-row">
+        <time class="post-date" datetime={data.date}>{data.date}</time>
+        <div class="post-row-content">
+          <div class="post-row-title">
+            <h3><a href={postUrl(id)}>{data.title}</a></h3>
+            {data.example && <span class="example-label">示例</span>}
+          </div>
+          <p>{data.description}</p>
+        </div>
+        {showCategory && (
+          <a class="category-label" href={categoryUrl(data.category)}>
+            {categories[data.category].title}
+          </a>
+        )}
+      </li>
+    ))}
+  </ul>
+) : (
+  <p class="empty-list">还没有文章。</p>
+)}

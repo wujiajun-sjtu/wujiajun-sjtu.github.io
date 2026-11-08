@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths } from 'astro'
+import PostList from '../../components/PostList.astro'
+import SiteLayout from '../../layouts/SiteLayout.astro'
+import { getPosts } from '../../posts'
+import { categories, categoryIds } from '../../site'
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts()
+  return categoryIds.map((category) => ({
+    params: { category },
+    props: { category, posts: posts.filter((post) => post.data.category === category) },
+  }))
+}) satisfies GetStaticPaths
+
+const { category, posts } = Astro.props
+const { title, description } = categories[category]
+---
+
+<SiteLayout title={title} description={description} active={category}>
+  <div class="site-width">
+    <section class="masthead masthead-compact">
+      <div>
+        <p class="eyebrow"><span></span>分类索引</p>
+        <h1>{title}</h1>
+        <p class="masthead-description">{description}</p>
+      </div>
+    </section>
+    <section aria-labelledby="archive-title">
+      <div class="section-heading">
+        <h2 id="archive-title">文章列表</h2>
+        <span>共 {posts.length} 篇</span>
+      </div>
+      <PostList posts={posts} showCategory={false} />
+    </section>
+  </div>
+</SiteLayout>
